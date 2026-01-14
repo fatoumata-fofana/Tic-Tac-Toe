@@ -1,0 +1,71 @@
+import random
+
+player_symbol = "X"
+cpu_symbol = "O"
+
+def create_board():
+    return [[1,2,3],[4,5,6],[7,8,9]]
+    
+def display_board(board):
+  for row in board: 
+    print(row)
+
+def get_player_choice(player_symbol):
+  choice = input("Player " + player_symbol + ", enter a number (1-9): ")
+  return int(choice)
+  
+def place_move(board, choice, player_symbol):
+  for i in range(3):
+    for j in range(3):
+      if board[i][j] == choice:
+         board[i][j] = player_symbol
+  return board
+  
+def check_winner(board,player_symbol):
+    for row in board:
+      #check rows for a win
+      if row[0] == row[1] == row[2] == player_symbol:
+        return True
+      
+    #check columns for a win
+    if board[0][0] == board[1][0] == board[2][0] == player_symbol:
+      return True
+    elif board[0][1] == board[1][1] == board[2][1] == player_symbol:
+      return True
+    elif board[0][2] == board[1][2] == board[2][2] == player_symbol:
+      return True
+    
+    #check diagonals for a win
+    if board[0][0] == board[1][1] == board[2][2] == player_symbol:
+      return True
+    elif board[0][2] == board[1][1] == board[2][0] == player_symbol:
+      return True
+    
+    #if no win
+    return False
+ 
+def random_cpu_choice(board, player_symbol, cpu_symbol):
+  available_choices = []
+  for row in board:
+    for cell in row:
+      if cell != player_symbol and cell != cpu_symbol:
+        available_choices.append(cell)
+  if len(available_choices) > 0:
+    return random.choice(available_choices)
+ 
+board = create_board()
+
+while True:
+  display_board(board)
+  choice = get_player_choice(player_symbol)
+  board = place_move(board, choice, player_symbol)
+  if check_winner(board, player_symbol):
+    display_board(board)
+    print("Player", player_symbol, "wins!")
+    break
+  cpu_choice = random_cpu_choice(board, player_symbol, cpu_symbol)
+  board = place_move(board, cpu_choice, cpu_symbol)
+  if check_winner(board, cpu_symbol):
+    display_board(board)
+    print("CPU wins!")
+    break
